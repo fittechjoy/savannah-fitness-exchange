@@ -1,5 +1,7 @@
 import { useState } from "react";
 import type { Member } from "../types/member";
+import { useMembers } from "../context/MembersContext";
+
 
 export default function AddMember() {
   const [formData, setFormData] = useState<Omit<Member, "id">>({
@@ -9,6 +11,9 @@ export default function AddMember() {
     status: "active",
     joinDate: "",
   });
+
+  const { addMember } = useMembers();
+
 
   const [error, setError] = useState("");
 
@@ -22,17 +27,26 @@ export default function AddMember() {
   };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!formData.name || !formData.phone || !formData.plan) {
-      setError("Please fill in all required fields.");
-      return;
-    }
+  if (!formData.name || !formData.phone || !formData.plan) {
+    setError("Please fill in all required fields.");
+    return;
+  }
 
-    console.log("New member:", formData);
-    setError("");
-    alert("Member added (mock)");
-  };
+  addMember(formData);
+  setError("");
+  alert("Member added successfully");
+
+  setFormData({
+    name: "",
+    phone: "",
+    plan: "",
+    status: "active",
+    joinDate: "",
+  });
+};
+
 
   return (
     <div className="max-w-xl bg-white p-6 rounded-lg shadow">

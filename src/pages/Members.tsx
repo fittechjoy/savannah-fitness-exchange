@@ -1,6 +1,8 @@
-import { mockMembers } from "../data/mockMembers";
+import { useMembers } from "../context/MembersContext";
 
 export default function Members() {
+  const { members } = useMembers();
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Members</h1>
@@ -16,7 +18,7 @@ export default function Members() {
             </tr>
           </thead>
           <tbody>
-            {mockMembers.map((member) => (
+            {members.map((member) => (
               <tr key={member.id} className="border-t">
                 <td className="p-3">{member.name}</td>
                 <td className="p-3">{member.phone}</td>
