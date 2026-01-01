@@ -1,11 +1,7 @@
-import Members from "./pages/Members";
+import AppRoutes from "./routes/AppRoutes";
 
 function App() {
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <Members />
-    </div>
-  );
+  return <AppRoutes />;
 }
 
 export default App;
