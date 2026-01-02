@@ -2,8 +2,10 @@ import { useMembers } from "../context/MembersContext";
 import { membershipPlans } from "../data/membershipPlans";
 
 
+
 export default function Members() {
-  const { members } = useMembers();
+const { members, renewMembership } = useMembers();
+
   const getPlanName = (planId: string) =>
   membershipPlans.find((p) => p.id === planId)?.name || "Unknown";
 
@@ -21,6 +23,8 @@ export default function Members() {
               <th className="p-3">Plan</th>
               <th className="p-3">Status</th>
               <th className="p-3">Expiry</th>
+              <th className="p-3">Action</th>
+
 
             </tr>
           </thead>
@@ -31,6 +35,17 @@ export default function Members() {
                 <td className="p-3">{member.phone}</td>
                 <td className="p-3">{getPlanName(member.planId)}</td>
                 <td className="p-3">{member.expiryDate}</td>
+                <td className="p-3">
+  <button
+    onClick={() =>
+      renewMembership(member.id, member.planId, 3000)
+    }
+    className="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+  >
+    Renew
+  </button>
+</td>
+
 
 
                 <td className="p-3">
