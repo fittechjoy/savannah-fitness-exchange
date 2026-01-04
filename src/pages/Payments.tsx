@@ -13,16 +13,24 @@ export default function Payments() {
   );
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-6">Payments</h1>
+    <div className="p-4 md:p-6">
+      <h1 className="text-2xl font-bold mb-6">
+        Savannah Fitness Exchange – Payments
+      </h1>
 
+      {/* Revenue Summary */}
       <div className="bg-white rounded-lg shadow p-4 mb-6">
-        <p className="text-gray-500">Total Revenue</p>
-        <p className="text-3xl font-bold">KES {totalRevenue}</p>
+        <p className="text-gray-500 text-sm">
+          Total Revenue
+        </p>
+        <p className="text-3xl font-bold text-slate-900">
+          KES {totalRevenue.toLocaleString()}
+        </p>
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <table className="w-full text-left">
+      {/* Payments Table */}
+      <div className="bg-white rounded-lg shadow overflow-x-auto">
+        <table className="min-w-[600px] w-full text-left">
           <thead className="bg-gray-100">
             <tr>
               <th className="p-3">Date</th>
@@ -31,6 +39,7 @@ export default function Payments() {
               <th className="p-3">Amount (KES)</th>
             </tr>
           </thead>
+
           <tbody>
             {payments.length === 0 ? (
               <tr>
@@ -43,13 +52,23 @@ export default function Payments() {
               </tr>
             ) : (
               payments.map((payment) => (
-                <tr key={payment.id} className="border-t">
+                <tr
+                  key={payment.id}
+                  className="border-t hover:bg-gray-50"
+                >
                   <td className="p-3">{payment.date}</td>
-                  <td className="p-3">{payment.memberId}</td>
+
+                  <td className="p-3 text-sm text-gray-600">
+                    {payment.memberId}
+                  </td>
+
                   <td className="p-3">
                     {getPlanName(payment.planId)}
                   </td>
-                  <td className="p-3">{payment.amount}</td>
+
+                  <td className="p-3 font-medium text-green-600">
+                    KES {payment.amount.toLocaleString()}
+                  </td>
                 </tr>
               ))
             )}

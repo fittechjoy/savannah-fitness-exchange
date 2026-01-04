@@ -23,54 +23,32 @@ export default function Members() {
   });
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Members</h1>
+    <div className="p-4 md:p-6">
+      <h1 className="text-2xl font-bold mb-4">
+        Savannah Fitness Exchange – Members
+      </h1>
 
-      {/* ✅ FILTERS + EXPORT (NOW INSIDE RETURN) */}
-      <div className="flex items-center gap-3 mb-4">
-        <button
-          onClick={() => setFilter("all")}
-          className={`px-4 py-2 rounded ${
-            filter === "all"
-              ? "bg-slate-900 text-white"
-              : "bg-gray-200"
-          }`}
-        >
-          All
-        </button>
-
-        <button
-          onClick={() => setFilter("active")}
-          className={`px-4 py-2 rounded ${
-            filter === "active"
-              ? "bg-slate-900 text-white"
-              : "bg-gray-200"
-          }`}
-        >
-          Active
-        </button>
-
-        <button
-          onClick={() => setFilter("expiring")}
-          className={`px-4 py-2 rounded ${
-            filter === "expiring"
-              ? "bg-slate-900 text-white"
-              : "bg-gray-200"
-          }`}
-        >
-          Expiring Soon
-        </button>
-
-        <button
-          onClick={() => setFilter("expired")}
-          className={`px-4 py-2 rounded ${
-            filter === "expired"
-              ? "bg-slate-900 text-white"
-              : "bg-gray-200"
-          }`}
-        >
-          Expired
-        </button>
+      {/* FILTERS + EXPORT */}
+      <div className="flex flex-wrap items-center gap-2 mb-4">
+        {["all", "active", "expiring", "expired"].map((key) => (
+          <button
+            key={key}
+            onClick={() => setFilter(key as any)}
+            className={`px-3 py-2 rounded text-sm min-h-[40px] ${
+              filter === key
+                ? "bg-slate-900 text-white"
+                : "bg-gray-200"
+            }`}
+          >
+            {key === "all"
+              ? "All"
+              : key === "active"
+              ? "Active"
+              : key === "expiring"
+              ? "Expiring Soon"
+              : "Expired"}
+          </button>
+        ))}
 
         <button
           onClick={() =>
@@ -92,15 +70,15 @@ export default function Members() {
               }))
             )
           }
-          className="ml-auto px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+          className="ml-auto px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600 min-h-[40px]"
         >
           Export CSV
         </button>
       </div>
 
-      {/* TABLE */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <table className="w-full text-left">
+      {/* TABLE (scrollable on mobile) */}
+      <div className="bg-white rounded-lg shadow overflow-x-auto">
+        <table className="min-w-[700px] w-full text-left">
           <thead className="bg-gray-100">
             <tr>
               <th className="p-3">Name</th>
@@ -141,7 +119,7 @@ export default function Members() {
                   <td className="p-3">
                     <Link
                       to={`/members/${member.id}`}
-                      className="text-blue-600 hover:underline"
+                      className="text-orange-600 hover:underline"
                     >
                       {member.name}
                     </Link>
@@ -172,8 +150,7 @@ export default function Members() {
                           3000
                         )
                       }
-                      className="bg-orange-500 text-white hover:bg-orange-600"
-
+                      className="px-3 py-2 bg-orange-500 text-white rounded hover:bg-orange-600 text-sm min-h-[40px]"
                     >
                       Renew
                     </button>
