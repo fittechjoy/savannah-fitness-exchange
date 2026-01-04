@@ -2,6 +2,8 @@ import { useMembers } from "../context/MembersContext";
 import { membershipPlans } from "../data/membershipPlans";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { exportToCSV } from "../utils/exportCsv";
+
 
 
 export default function Members() {
@@ -21,13 +23,12 @@ export default function Members() {
   return true;
 });
 
-<div className="flex gap-3 mb-4">
+<div className="flex items-center gap-3 mb-4">
+  {/* Filter buttons */}
   <button
     onClick={() => setFilter("all")}
     className={`px-4 py-2 rounded ${
-      filter === "all"
-        ? "bg-slate-900 text-white"
-        : "bg-gray-200"
+      filter === "all" ? "bg-slate-900 text-white" : "bg-gray-200"
     }`}
   >
     All
@@ -36,9 +37,7 @@ export default function Members() {
   <button
     onClick={() => setFilter("active")}
     className={`px-4 py-2 rounded ${
-      filter === "active"
-        ? "bg-slate-900 text-white"
-        : "bg-gray-200"
+      filter === "active" ? "bg-slate-900 text-white" : "bg-gray-200"
     }`}
   >
     Active
@@ -47,9 +46,7 @@ export default function Members() {
   <button
     onClick={() => setFilter("expiring")}
     className={`px-4 py-2 rounded ${
-      filter === "expiring"
-        ? "bg-slate-900 text-white"
-        : "bg-gray-200"
+      filter === "expiring" ? "bg-slate-900 text-white" : "bg-gray-200"
     }`}
   >
     Expiring Soon
@@ -58,14 +55,38 @@ export default function Members() {
   <button
     onClick={() => setFilter("expired")}
     className={`px-4 py-2 rounded ${
-      filter === "expired"
-        ? "bg-slate-900 text-white"
-        : "bg-gray-200"
+      filter === "expired" ? "bg-slate-900 text-white" : "bg-gray-200"
     }`}
   >
     Expired
   </button>
+
+  {/* Export button pushed to the right */}
+  <button
+    onClick={() =>
+      exportToCSV(
+        `members-${filter}.csv`,
+        filteredMembers.map((member) => ({
+          Name: member.name,
+          Phone: member.phone,
+          Plan: getPlanName(member.planId),
+          Status:
+            member.status === "inactive"
+              ? "Expired"
+              : member.daysLeft !== undefined && member.daysLeft <= 7
+              ? `Expires in ${member.daysLeft} days`
+              : "Active",
+          "Expiry Date": member.expiryDate,
+          "Days Left": member.daysLeft ?? "",
+        }))
+      )
+    }
+    className="ml-auto px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+  >
+    Export CSV
+  </button>
 </div>
+
 
 
 
