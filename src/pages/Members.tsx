@@ -1,12 +1,74 @@
 import { useMembers } from "../context/MembersContext";
 import { membershipPlans } from "../data/membershipPlans";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+
 
 export default function Members() {
   const { members, renewMembership } = useMembers();
+  const [filter, setFilter] = useState<
+  "all" | "active" | "expired" | "expiring"
+>("all");
+
 
   const getPlanName = (planId: string) =>
     membershipPlans.find((p) => p.id === planId)?.name || "Unknown";
+  const filteredMembers = members.filter((member) => {
+  if (filter === "active") return member.status === "active";
+  if (filter === "expired") return member.status === "inactive";
+  if (filter === "expiring")
+    return member.daysLeft !== undefined && member.daysLeft <= 7;
+  return true;
+});
+
+<div className="flex gap-3 mb-4">
+  <button
+    onClick={() => setFilter("all")}
+    className={`px-4 py-2 rounded ${
+      filter === "all"
+        ? "bg-slate-900 text-white"
+        : "bg-gray-200"
+    }`}
+  >
+    All
+  </button>
+
+  <button
+    onClick={() => setFilter("active")}
+    className={`px-4 py-2 rounded ${
+      filter === "active"
+        ? "bg-slate-900 text-white"
+        : "bg-gray-200"
+    }`}
+  >
+    Active
+  </button>
+
+  <button
+    onClick={() => setFilter("expiring")}
+    className={`px-4 py-2 rounded ${
+      filter === "expiring"
+        ? "bg-slate-900 text-white"
+        : "bg-gray-200"
+    }`}
+  >
+    Expiring Soon
+  </button>
+
+  <button
+    onClick={() => setFilter("expired")}
+    className={`px-4 py-2 rounded ${
+      filter === "expired"
+        ? "bg-slate-900 text-white"
+        : "bg-gray-200"
+    }`}
+  >
+    Expired
+  </button>
+</div>
+
+
+
 
   return (
     <div className="p-6">
@@ -26,7 +88,8 @@ export default function Members() {
           </thead>
 
           <tbody>
-            {members.map((member) => {
+            {filteredMembers.map((member) => {
+
               const statusClasses =
                 member.status === "inactive"
                   ? "bg-red-100 text-red-700"
@@ -64,6 +127,7 @@ export default function Members() {
                   <td className="p-3">
                     {getPlanName(member.planId)}
                   </td>
+                  
 
                   {/* Status */}
                   <td className="p-3">
