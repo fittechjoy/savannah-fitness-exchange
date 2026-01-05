@@ -4,6 +4,8 @@ import type { Payment } from "../types/payment";
 import { mockMembers } from "../data/mockMembers";
 import { membershipPlans } from "../data/membershipPlans";
 import { isExpired, daysUntilExpiry } from "../utils/dateUtils";
+import type { CheckIn } from "../types/checkin";
+
 
 /* ------------------ Types ------------------ */
 
@@ -23,6 +25,19 @@ interface MembersContextType {
 const MembersContext = createContext<MembersContextType | undefined>(
   undefined
 );
+interface MembersContextType {
+  members: Member[];
+  payments: Payment[];
+  checkIns: CheckIn[];
+  addMember: (member: Omit<Member, "id" | "expiryDate">) => void;
+  renewMembership: (
+    memberId: string,
+    planId: string,
+    amount: number
+  ) => void;
+  checkInMember: (memberId: string) => void;
+}
+
 
 /* ------------------ Helpers ------------------ */
 
@@ -95,6 +110,22 @@ export function MembersProvider({
     setPayments((prev) => [...prev, payment]);
   };
 
+  const [checkIns, setCheckIns] = useState<CheckIn[]>([]);
+
+const checkInMember = (memberId: string) => {
+  const now = new Date();
+
+  const newCheckIn: CheckIn = {
+    id: crypto.randomUUID(),
+    memberId,
+    date: now.toISOString().split("T")[0],
+    time: now.toTimeString().slice(0, 5),
+  };
+
+  setCheckIns((prev) => [newCheckIn, ...prev]);
+};
+
+
   /* -------- Derived members (status + daysLeft) -------- */
 
   const membersWithStatus: Member[] = members.map((member) => {
@@ -116,13 +147,16 @@ export function MembersProvider({
 
   return (
     <MembersContext.Provider
-      value={{
-        members: membersWithStatus,
-        payments,
-        addMember,
-        renewMembership,
-      }}
-    >
+  value={{
+    members: membersWithStatus,
+    payments,
+    checkIns,
+    addMember,
+    renewMembership,
+    checkInMember,
+  }}
+>
+
       {children}
     </MembersContext.Provider>
   );

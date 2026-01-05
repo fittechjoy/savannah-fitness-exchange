@@ -1,9 +1,11 @@
 import { useParams } from "react-router-dom";
 import { useMembers } from "../context/MembersContext";
 import { membershipPlans } from "../data/membershipPlans";
+import { QRCodeSVG } from "qrcode.react";
+
 
 export default function MemberProfile() {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const { members, payments, renewMembership } = useMembers();
 
   const member = members.find((m) => m.id === id);
@@ -32,6 +34,9 @@ export default function MemberProfile() {
       : member.daysLeft !== undefined && member.daysLeft <= 7
       ? "bg-yellow-100 text-yellow-700"
       : "bg-green-100 text-green-700";
+
+  // 🔑 QR should point to a real check-in URL
+  const checkInUrl = `${window.location.origin}/checkin/${member.id}`;
 
   return (
     <div className="p-4 md:p-6 space-y-6">
@@ -81,6 +86,27 @@ export default function MemberProfile() {
         >
           Renew Membership
         </button>
+      </div>
+
+      {/* QR CHECK-IN */}
+      <div className="bg-white rounded-lg shadow p-6">
+        <h3 className="font-semibold mb-2">
+          Member Check-In QR Code
+        </h3>
+
+        <div className="flex justify-center my-4">
+          <QRCodeSVG
+            value={checkInUrl}
+            size={160}
+            bgColor="#ffffff"
+            fgColor="#000000"
+              />
+
+        </div>
+
+        <p className="text-sm text-gray-500 text-center">
+          Scan this code at the entrance to check in.
+        </p>
       </div>
 
       {/* Payment History */}

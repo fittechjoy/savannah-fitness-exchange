@@ -7,6 +7,8 @@ import Memberships from "../pages/Memberships";
 import Payments from "../pages/Payments";
 import MemberProfile from "../pages/MemberProfile";
 import { useAuth } from "../context/AuthContext";
+import CheckIn from "../pages/CheckIn";
+
 
 export default function AppRoutes() {
   const { role } = useAuth(); // ✅ hook INSIDE component
@@ -19,6 +21,8 @@ export default function AppRoutes() {
         <Route path="/add-member" element={<AddMember />} />
         <Route path="/memberships" element={<Memberships />} />
         <Route path="/members/:id" element={<MemberProfile />} />
+        <Route path="/checkin/:memberId" element={<CheckIn />} />
+
 
         {/* 🔐 Admin-only route */}
         <Route
