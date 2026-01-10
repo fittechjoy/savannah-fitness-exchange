@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Member {
+  id        String   @id @default(uuid())
+  fullName  String
+  phone     String   @unique
+  email     String?
+  status    MemberStatus @default(ACTIVE)
+  createdAt DateTime @default(now())
+
+  memberships Membership[]
+  payments    Payment[]
+  checkIns    CheckIn[]
+}
+
+model Membership {
+  id        String   @id @default(uuid())
+  memberId  String
+  plan      String
+  startDate DateTime
+  endDate   DateTime
+  isActive  Boolean  @default(true)
+
+  member Member @relation(fields: [memberId], references: [id])
+}
+
+model Payment {
+  id        String   @id @default(uuid())
+  memberId  String
+  amount    Int
+  method    String
+  reference String?
+  createdAt DateTime @default(now())
+
+  member Member @relation(fields: [memberId], references: [id])
+}
+
+model CheckIn {
+  id        String   @id @default(uuid())
+  memberId  String
+  scannedAt DateTime @default(now())
+
+  member Member @relation(fields: [memberId], references: [id])
+}
+
+enum MemberStatus {
+  ACTIVE
+  EXPIRED
+  SUSPENDED
+}
