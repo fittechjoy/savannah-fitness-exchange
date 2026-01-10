@@ -32,15 +32,16 @@ model Membership {
 }
 
 model Payment {
-  id        String   @id @default(uuid())
+  id        String        @id @default(uuid())
   memberId  String
   amount    Int
-  method    String
+  method    PaymentMethod
   reference String?
-  createdAt DateTime @default(now())
+  createdAt DateTime      @default(now())
 
   member Member @relation(fields: [memberId], references: [id])
 }
+
 
 model CheckIn {
   id        String   @id @default(uuid())
@@ -54,4 +55,10 @@ enum MemberStatus {
   ACTIVE
   EXPIRED
   SUSPENDED
+}
+
+enum PaymentMethod {
+  MPESA
+  CASH
+  PDQ
 }
